@@ -1,12 +1,17 @@
 import './styles.scss';
 import 'bootstrap';
 import { string } from 'yup';
+import onChange from 'on-change';
 
 const inputElement = document.querySelector('#url-input');
 
 const state = {
   urlColl: [],
 };
+const watchedState = onChange(state, (path, value, previousValue) => {
+  console.log(`Путь "${path}" изменился с ${previousValue} на ${value}`);
+});
+
 const isDubble = (rssUrl) => {
   console.log(state.urlColl.includes(rssUrl));
   console.log(state.urlColl);
@@ -30,7 +35,7 @@ form.addEventListener('submit', (event) => {
       const isDubbled = isDubble(rssUrl);
       console.log(isDubbled);
       if (data && !isDubbled) {
-        state.urlColl.push(rssUrl);
+        watchedState.urlColl.push(rssUrl);
         inputElement.classList.remove('is-invalid');
         form.reset();
         console.log(state);
