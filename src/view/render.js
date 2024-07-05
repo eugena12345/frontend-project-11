@@ -1,5 +1,6 @@
-const renderAddRssResult = (state) => {
+const renderAddRssResult = (state, i18next) => {
   console.log(state.errColl);
+  console.log(i18next.t('key'));
   const inputElement = document.querySelector('#url-input');
   // const divInput = document.querySelector('.mx-auto');
   const feedbackDiv = document.querySelector('.feedback');
@@ -15,7 +16,8 @@ const renderAddRssResult = (state) => {
     inputElement.classList.remove('is-invalid');
     feedbackDiv.classList.remove('text-danger');
     feedbackDiv.textContent = '';
-    feedbackDiv.textContent = 'RSS успешно загружен'; // причину указывать разную
+    console.log(i18next.t('addRss.success'));
+    feedbackDiv.textContent = i18next.t('addRss.success');
     form.reset();
   }
   // divInput.append(addingRssResult);

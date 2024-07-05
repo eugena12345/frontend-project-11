@@ -3,6 +3,7 @@ import 'bootstrap';
 import { string } from 'yup';
 import onChange from 'on-change';
 import renderAddRssResult from './view/render';
+import i18next from 'i18next';
 
 // const inputElement = document.querySelector('#url-input');
 const app = () => {
@@ -14,7 +15,7 @@ const app = () => {
   const watchedState = onChange(state, (path, value, previousValue) => {
     console.log(`Путь "${path}" изменился с ${previousValue} на ${value}`);
     if (path === 'validationResult') {
-      renderAddRssResult(state);
+      renderAddRssResult(state, i18next);
     }
   });
 
