@@ -2,35 +2,54 @@ import './styles.scss';
 import 'bootstrap';
 import { string } from 'yup';
 import onChange from 'on-change';
-import renderAddRssResult from './view/render';
+import renderAddRssResult, { renderDisable, renderFeeds } from './view/render';
 import i18next from 'i18next';
 
-// const inputElement = document.querySelector('#url-input');
-const getcontent = (content) => {
-    if (content.includes('[CDATA')) {
-        return content.match(/(?<=(\[CDATA\[)).*(?=\]\])/gm).join('');
-    }
-    return content;
+const parser = (data) => {
+    const parser = new DOMParser();
+    const doc3 = parser.parseFromString(data.contents, "text/xml");
+    const channel = doc3.querySelector('channel');
+    const channelTitle = channel.querySelector('title');
+    const channelDescription = channel.querySelector('description');
+    const items = [...doc3.querySelectorAll('item')]
+        .map((item) => {
+            const itemTitle = item.querySelector('title').textContent;
+            const itemDescription = item.querySelector('description').textContent;
+            const itemLink = item.querySelector('link').textContent;
+            return { itemTitle, itemDescription, itemLink };
+        })
+    return {
+        title: channelTitle.textContent,
+        description: channelDescription.textContent,
+        items
+    };
 }
 
 const app = () => {
     const state = {
-        urlColl: [],
-        errColl: [],
-        validationResult: null,
+        form: {
+            status: null,
+            isValid: false,
+            errors: null,
+        },
+        feeds: [],
+        posts: [],
     };
     const watchedState = onChange(state, (path, value, previousValue) => {
-        console.log(`Путь "${path}" изменился с ${previousValue} на ${value}`);
-        if (path === 'validationResult') {
+        if (path === 'form.isValid') {
             renderAddRssResult(state, i18next);
+        }
+        if (path === 'form.status') {
+            renderDisable(state.form.status);
+        }
+        if (path === 'feeds') {
+            renderFeeds(state.feeds);
         }
     });
 
     const isDubble = (rssUrl) => {
-        console.log(state.urlColl.includes(rssUrl));
-        console.log(state.urlColl);
-
-        if (state.urlColl.includes(rssUrl)) {
+        const links = state.feeds.map((feed) => feed.link);
+        if (links.length > 0 && links.includes(rssUrl)) {
             return true;
         }
         return false;
@@ -40,12 +59,14 @@ const app = () => {
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
+        // работа  с формой через get 
         const rssUrl = form.elements[0].value;
-        const schema = string().url().nullable(); // пересмотреть
+        const schema = string().url().nullable(); // пересмотреть и обработать ошибки валидации, переписать запрос через аксиос
         schema.isValid(rssUrl)
             .then((data) => {
                 const isDubbled = isDubble(rssUrl);
                 if (data && !isDubbled) {
+                    watchedState.form.status = 'sending';
                     // задизейблить кнопку
                     fetch(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(rssUrl)}`)
                         .then(response => {
@@ -53,27 +74,18 @@ const app = () => {
                             throw new Error('Network response was not ok.')
                         })
                         .then(data => {
-                            const parser = new DOMParser();
-                            const doc3 = parser.parseFromString(data.contents, "text/html");
-                            const channel = doc3.querySelector('channel');
-                            const channelTitle = channel.querySelector('title');
-                            const channelDescription = channel.querySelector('description');
-                            // const title = simplexml_load_file(channelTitle, null, LIBXML_NOCDATA);
-                            const items = doc3.querySelectorAll('item'); // have a titel and a description
-
-
-                            console.log(getcontent(channelTitle.textContent)); 
-                            console.log(getcontent(channelDescription.textContent));
-                            // console.log(doc3.body)
-                            console.log(items)
+                            const { title, description, items } = parser(data);
+                            const feed = { title, description, link: rssUrl };
+                            watchedState.feeds.push(feed);
+                            watchedState.posts.push(items);
                             form.reset();
-                            // раздизейблить кнопку
+                            watchedState.form.isValid = true;
+                            watchedState.form.status = 'active';
                         });
-                    watchedState.urlColl.push(rssUrl);
-                    watchedState.validationResult = true;
+
                 } else {
-                    watchedState.validationResult = false;
-                    watchedState.errColl.push('something wrong');
+                    watchedState.form.isValid = false;
+                    watchedState.form.errors = 'something wrong adding errors text';
                 }
             });
     });

@@ -1,13 +1,10 @@
 const renderAddRssResult = (state, i18next) => {
-  console.log(state.errColl);
-  console.log(i18next.t('key'));
+  console.log(state.form.errors);
   const inputElement = document.querySelector('#url-input');
-  // const divInput = document.querySelector('.mx-auto');
   const feedbackDiv = document.querySelector('.feedback');
   const form = document.querySelector('form');
 
-  // addingRssResult.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
-  if (state.validationResult === false) {
+  if (state.form.isValid === false) {
     inputElement.classList.add('is-invalid');
     feedbackDiv.classList.add('text-danger');
     feedbackDiv.textContent = '';
@@ -20,6 +17,40 @@ const renderAddRssResult = (state, i18next) => {
     feedbackDiv.textContent = i18next.t('addRss.success');
     form.reset();
   }
-  // divInput.append(addingRssResult);
 };
+
+export const renderDisable = (status) => {
+  const form = document.querySelector('form');
+  const button = form.querySelector('button');
+  const inputElement = document.querySelector('#url-input');
+  const feedbackDiv = document.querySelector('.feedback');
+
+  if (status === 'sending') {
+    button.setAttribute('disabled', '');
+    inputElement.classList.remove('is-invalid');
+    feedbackDiv.classList.remove('text-danger');
+    feedbackDiv.textContent = '';
+
+  }
+  if (status === 'active') {
+    button.removeAttribute('disabled');
+  }
+};
+
+export const renderFeeds = (feeds) => {
+  const feedsElement = document.querySelector('.feeds');
+  const elementTitle = document.createElement('h3');
+  elementTitle.textContent = "Feeds";
+  const ulFeeds = document.createElement('ul');
+  feeds.forEach((feed) => {
+    const feedItem = document.createElement('li');
+    const title = document.createElement('p');
+    title.textContent = feed.title;
+    const description = document.createElement('p');
+    description.textContent = feed.description;
+    feedItem.append(title, description);
+    ulFeeds.append(feedItem)
+  })
+  feedsElement.append(elementTitle, ulFeeds);
+}
 export default renderAddRssResult;
