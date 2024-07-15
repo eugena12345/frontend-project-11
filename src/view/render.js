@@ -8,7 +8,10 @@ const renderAddRssResult = (state, i18next) => {
     inputElement.classList.add('is-invalid');
     feedbackDiv.classList.add('text-danger');
     feedbackDiv.textContent = '';
-    feedbackDiv.textContent = 'RSS НЕЕЕЕЕ загружен'; // причину указывать разную
+    feedbackDiv.textContent = i18next.t('addRss.success'); // здесь по факту другой должен быть ключ, этот указан для эксперимента
+    // Cannot read properties of undefined (reading 't')
+    // TypeError: Cannot read properties of undefined (reading 't')
+    // причину указывать разную
   } else {
     inputElement.classList.remove('is-invalid');
     feedbackDiv.classList.remove('text-danger');

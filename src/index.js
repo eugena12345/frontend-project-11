@@ -4,7 +4,7 @@ import ru from './translation.js';
 
 i18next.init({
   lng: 'ru', // Текущий язык
-  debug: true,
+  debug: false,
   resources: {
     ru,
   },
