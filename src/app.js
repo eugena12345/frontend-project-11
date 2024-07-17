@@ -5,6 +5,7 @@ import onChange from 'on-change';
 import renderAddRssResult, { renderDisable, renderFeeds } from './view/render';
 import i18next from 'i18next';
 import axios from 'axios';
+import view from './view/index.js'
 
 const parser = (data) => {
     try {
@@ -41,22 +42,8 @@ const app = () => {
         feeds: [],
         posts: [],
     };
-    const watchedState = onChange(state, (path, value, previousValue) => {
-        // анализ путей и выхов маленьких рендер-функций переенсти в render.js также можно в папке вью сделать index.js
-        if (path === 'form.isValid') {
-            renderAddRssResult(state, i18next);
-        }
-        if (path === 'form.status') {
-            renderDisable(state.form.status, i18next);
-        }
-        if (path === 'feeds') {
-            renderFeeds(state.feeds, i18next);
-        }
-        if (path === 'form.errors') {
-            renderAddRssResult(state, i18next);
-        }
-    });
-
+    const watchedState = view(state, i18next);
+// вынести в функцию валидация+ дублирование которая вернет промис
     const isDubble = (rssUrl) => {
         const links = state.feeds.map((feed) => feed.link);
         if (links.length > 0 && links.includes(rssUrl)) {
@@ -70,18 +57,9 @@ const app = () => {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         watchedState.form.errors = null;
-        // работа  с формой через get 
-        // console.log(event.target);
-        // const formData = new FormData(event.target);
-        //   console.log(formData);
-        //  const rssUrl = formData.get('url').trim();
-        //  console.log(rssUrl);
-        // state.value = value;
-        // state.mode = 'text';
-        //render(state, nameEl);
-        //////////////////
-        const rssUrl = form.elements[0].value;
-        const schema = string().url().nullable(); // пересмотреть и обработать ошибки валидации, переписать запрос через аксиос
+        const formData = new FormData(event.target);
+        const rssUrl = formData.get('url')
+        const schema = string().required().trim().url().nullable(); // пересмотреть и обработать ошибки валидации и пустая строка, переписать запрос через аксиос 
         schema.validate(rssUrl)
             .then((data) => {
                 console.log(data);
@@ -93,7 +71,7 @@ const app = () => {
                         url: `https://allorigins.hexlet.app/get?disableCache=true&url=${rssUrl}`,
                     })
                         .then((response) => {
-                                                            console.log(response);
+                            console.log(response);
 
                             if (response.status === 200) {
                                 //console.log(response.data);

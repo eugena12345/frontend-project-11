@@ -1,4 +1,4 @@
-const renderAddRssResult = (state, i18next) => {
+export const renderAddRssResult = (state, i18next) => {
   console.log(state.form.errors);
   const inputElement = document.querySelector('#url-input');
   const feedbackDiv = document.querySelector('.feedback');
@@ -59,4 +59,4 @@ export const renderFeeds = (feeds) => {
   })
   feedsElement.append(elementTitle, ulFeeds);
 }
-export default renderAddRssResult;
+
