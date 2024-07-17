@@ -8,7 +8,9 @@ const renderAddRssResult = (state, i18next) => {
     inputElement.classList.add('is-invalid');
     feedbackDiv.classList.add('text-danger');
     feedbackDiv.textContent = '';
-    feedbackDiv.textContent = i18next.t('addRss.success'); // здесь по факту другой должен быть ключ, этот указан для эксперимента
+    feedbackDiv.textContent = i18next.t('addRss.success');
+    //'неуспешно'
+    // i18next.t('addRss.success'); // здесь по факту другой должен быть ключ, этот указан для эксперимента
     // Cannot read properties of undefined (reading 't')
     // TypeError: Cannot read properties of undefined (reading 't')
     // причину указывать разную
@@ -16,8 +18,9 @@ const renderAddRssResult = (state, i18next) => {
     inputElement.classList.remove('is-invalid');
     feedbackDiv.classList.remove('text-danger');
     feedbackDiv.textContent = '';
-    console.log(i18next.t('addRss.success'));
+    //console.log(i18next.t('addRss.success'));
     feedbackDiv.textContent = i18next.t('addRss.success');
+    //i18next.t('addRss.success');
     form.reset();
   }
 };
