@@ -100,7 +100,8 @@ const app = () => {
                                 const { title, description, items } = parsedData;
                                 const feed = { title, description, link: rssUrl }; // id добавить lodash
                                 watchedState.feeds.push(feed);
-                                watchedState.posts.push(items);
+                                console.log(items)
+                                watchedState.posts = watchedState.posts.concat(items)
                                 form.reset();
                                 watchedState.form.isValid = true;
                                 watchedState.form.status = 'active';
@@ -111,6 +112,7 @@ const app = () => {
             .catch((err) => {
                 // console.log(err.message);
                 watchedState.form.isValid = false;
+                //обработать ошибку нестабильного интернет соединения
                 if (err.message === 'sameRss') {
                     watchedState.form.errors = 'sameRss';
                 } else {

@@ -1,4 +1,4 @@
-import {renderAddRssResult, renderDisable, renderFeeds} from './render.js'
+import {renderAddRssResult, renderDisable, renderFeeds, renderPosts} from './render.js'
 import onChange from 'on-change';
 
 export default (state, i18next) => {
@@ -11,6 +11,9 @@ export default (state, i18next) => {
         }
         if (path === 'feeds') {
             renderFeeds(state.feeds, i18next);
+        }
+        if (path === 'posts') {
+            renderPosts(state.posts, i18next);
         }
         if (path === 'form.errors') {
             renderAddRssResult(state, i18next);
