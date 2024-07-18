@@ -32,6 +32,7 @@ const parser = (data) => {
 
 }
 
+
 const app = () => {
     const state = {
         form: {
@@ -43,7 +44,7 @@ const app = () => {
         posts: [],
     };
     const watchedState = view(state, i18next);
-// вынести в функцию валидация+ дублирование которая вернет промис
+    // вынести в функцию валидация+ дублирование которая вернет промис
     const isDubble = (rssUrl) => {
         const links = state.feeds.map((feed) => feed.link);
         if (links.length > 0 && links.includes(rssUrl)) {
@@ -52,6 +53,18 @@ const app = () => {
         return false;
     };
 
+    const validate = (rssUrl) => {
+        if (isDubble(rssUrl)) {
+            //watchedState.form.errors = 'sameRss';
+            return new Promise((resolve, reject) => {
+                reject(new Error('sameRss'));
+            });
+
+        }
+        const schema = string().required().trim().url().nullable(); // пересмотреть и обработать ошибки валидации и пустая строка, переписать запрос через аксиос 
+        return schema.validate(rssUrl);
+    }
+
     const form = document.querySelector('form');
 
     form.addEventListener('submit', (event) => {
@@ -59,12 +72,13 @@ const app = () => {
         watchedState.form.errors = null;
         const formData = new FormData(event.target);
         const rssUrl = formData.get('url')
-        const schema = string().required().trim().url().nullable(); // пересмотреть и обработать ошибки валидации и пустая строка, переписать запрос через аксиос 
-        schema.validate(rssUrl)
+        validate(rssUrl)
+            // const schema = string().required().trim().url().nullable(); // пересмотреть и обработать ошибки валидации и пустая строка, переписать запрос через аксиос 
+            // schema.validate(rssUrl)
             .then((data) => {
                 console.log(data);
-                const isDubbled = isDubble(rssUrl);
-                if (data && !isDubbled) {
+                // const isDubbled = isDubble(rssUrl);
+                if (data) {
                     watchedState.form.status = 'sending';
                     axios({
                         method: 'get',
@@ -72,12 +86,9 @@ const app = () => {
                     })
                         .then((response) => {
                             console.log(response);
-
                             if (response.status === 200) {
-                                //console.log(response.data);
                                 return response.data;
                             };
-                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!', response);
                             watchedState.form.errors = 'bad response';
                             throw new Error('Network response was not ok.')
                         })
@@ -94,14 +105,17 @@ const app = () => {
                                 watchedState.form.isValid = true;
                                 watchedState.form.status = 'active';
                             }
-
                         });
-
                 }
             })
             .catch((err) => {
-                console.log(err)
-                //  watchedState.form.errors = 'invalidUrl';
+                // console.log(err.message);
+                watchedState.form.isValid = false;
+                if (err.message === 'sameRss') {
+                    watchedState.form.errors = 'sameRss';
+                } else {
+                    watchedState.form.errors = 'invalidUrl';
+                }
             })
     });
 };
