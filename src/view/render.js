@@ -1,5 +1,5 @@
 export const renderAddRssResult = (state, i18next) => {
-  console.log(state.form.errors);
+  // console.log(state.form.errors);
   const inputElement = document.querySelector('#url-input');
   const feedbackDiv = document.querySelector('.feedback');
   const form = document.querySelector('form');
@@ -58,14 +58,12 @@ export const renderFeeds = (feeds) => {
 }
 
 export const renderPosts = (posts) => {
-  console.log(posts)
   const postsElement = document.querySelector('.feeds');
   const elementTitle = document.createElement('h3');
   elementTitle.textContent = "Посты";
   const ulPosts = document.createElement('ul');
   ulPosts.classList.add("list-group", "border-0", "rounded-0");//list-group border-0 rounded-0
   posts.forEach((post) => {
-    console.log(post.itemTitle);
     const postItem = document.createElement('li');
     postItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-start", "border-0", "border-end-0");
     const link = document.createElement('a');
@@ -73,16 +71,23 @@ export const renderPosts = (posts) => {
     link.setAttribute('href', post.itemLink);
     link.setAttribute('data-id', 2); // add ID
     link.text = post.itemTitle;
-    postItem.append(link)
-    // const title = document.createElement('h3');
-    // title.classList.add("h6", "m-0");
-    // title.textContent = post.itemTitle;
-    // const description = document.createElement('p');
-    // description.classList.add("m-0", 'small', 'text-black-50');
-    // description.textContent = post.itemDescription;
-    // postItem.append(title, description);
-    ulPosts.append(postItem)
-    console.log(postItem)
+    const buttonPost = document.createElement('button');
+    buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    buttonPost.setAttribute('type', 'button');
+    buttonPost.setAttribute('data-id', '202');
+    buttonPost.setAttribute('data-bs-toggle', "modal");
+    buttonPost.setAttribute('data-bs-target', '#modal');
+    buttonPost.textContent = 'Просмотр';
+    postItem.append(link, buttonPost);
+    ulPosts.append(postItem);
+
   })
   postsElement.append(elementTitle, ulPosts);
+  const allButtons = document.querySelectorAll('button');
+  allButtons.forEach((button) => {
+    button.addEventListener(('click'), () => {
+      console.log('sdfsfdsdffffffffffffffffffffffffffffff')
+    });
+  }
+  );
 }
