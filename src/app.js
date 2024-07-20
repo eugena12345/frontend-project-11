@@ -106,6 +106,9 @@ const app = () => {
                                 watchedState.form.isValid = true;
                                 watchedState.form.status = 'active';
                             }
+                        })
+                        .then(() => {
+                            updatePost(state);
                         });
                 }
             })
@@ -119,9 +122,40 @@ const app = () => {
                     watchedState.form.errors = 'invalidUrl';
                 }
             })
+
     });
 };
 
+
+const updatePost = (state) => {
+    //console.log(`update`)
+    if (state.feeds.length > 0) {
+        //console.log(`state.feeds.length > 0`)
+
+        state.feeds.forEach((feed) => {
+            console.log(`feed`, feed)
+
+            axios({
+                method: 'get',
+                url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
+            })
+                .then((response) => {
+                    console.log(response);
+                    setTimeout(() => {
+                        updatePost(state)
+                    }, 5000)
+                }
+                )
+
+                .catch((e) => {
+                    console.log(e);
+                });
+        }
+        );
+
+    }
+
+}
 
 export default app;
 
