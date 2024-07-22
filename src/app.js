@@ -108,7 +108,11 @@ const app = () => {
                             }
                         })
                         .then(() => {
-                            updatePost(state);
+                            console.log('state.feeds.length', state.feeds.length)
+                            if (state.feeds.length < 2) {
+                                updatePost(state);
+                            }
+
                         });
                 }
             })
@@ -124,6 +128,9 @@ const app = () => {
             })
 
     });
+
+    updatePost(state);
+
 };
 
 
@@ -131,31 +138,43 @@ const updatePost = (state) => {
     //console.log(`update`)
     if (state.feeds.length > 0) {
         //console.log(`state.feeds.length > 0`)
+        const getNewPosts = () => {
+            return new Promise((resolve, reject) => {
+                state.feeds.forEach((feed) => {
+                    console.log(`feed`, feed)
 
-        state.feeds.forEach((feed) => {
-            console.log(`feed`, feed)
+                    axios({
+                        method: 'get',
+                        url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
+                    })
+                        .then((response) => {
+                            console.log(state.feeds);
+                            // response
+                            resolve()
+                        }
+                        )
 
-            axios({
-                method: 'get',
-                url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
-            })
-                .then((response) => {
-                    console.log(response);
-                    setTimeout(() => {
-                        updatePost(state)
-                    }, 5000)
-                }
-                )
+                        .catch((e) => {
+                            console.log(e);
+                        });
+                })
+            });
 
-                .catch((e) => {
-                    console.log(e);
-                });
+
         }
-        );
+        return getNewPosts()
+            .then(() => {
+                setTimeout(() => {
+                    updatePost(state)
+                }, 5000)
+            }
+            );
 
     }
 
 }
+
+
 
 export default app;
 
