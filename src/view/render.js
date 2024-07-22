@@ -59,6 +59,7 @@ export const renderFeeds = (feeds) => {
 
 export const renderPosts = (posts) => {
   const postsElement = document.querySelector('.feeds');
+  postsElement.textContent = '';//!!!!!!!!!!!!!!!!!!
   const elementTitle = document.createElement('h3');
   elementTitle.textContent = "Посты";
   const ulPosts = document.createElement('ul');
