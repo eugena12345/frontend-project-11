@@ -38,6 +38,7 @@ export const renderDisable = (status) => {
 
 export const renderFeeds = (feeds) => {
   const feedsElement = document.querySelector('.feeds');
+  feedsElement.textContent = '';
   const elementTitle = document.createElement('h3');
   elementTitle.textContent = "Фиды";
   const ulFeeds = document.createElement('ul');
@@ -58,8 +59,8 @@ export const renderFeeds = (feeds) => {
 }
 
 export const renderPosts = (posts) => {
-  const postsElement = document.querySelector('.feeds');
-  postsElement.textContent = '';//!!!!!!!!!!!!!!!!!!
+  const postsElement = document.querySelector('.posts');
+  postsElement.textContent = '';
   const elementTitle = document.createElement('h3');
   elementTitle.textContent = "Посты";
   const ulPosts = document.createElement('ul');
