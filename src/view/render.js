@@ -77,19 +77,22 @@ export const renderPosts = (posts) => {
     buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     buttonPost.setAttribute('type', 'button');
     buttonPost.setAttribute('data-id', '202');
-    buttonPost.setAttribute('data-bs-toggle', "modal");
-    buttonPost.setAttribute('data-bs-target', '#modal');
+    //buttonPost.setAttribute('data-bs-toggle', "modal");
+    //buttonPost.setAttribute('data-bs-target', '#modal');
     buttonPost.textContent = 'Просмотр';
+    buttonPost.addEventListener('click', () => {
+      console.log('click show details');
+    });
     postItem.append(link, buttonPost);
     ulPosts.append(postItem);
 
   })
   postsElement.append(elementTitle, ulPosts);
-  const allButtons = document.querySelectorAll('button');
-  allButtons.forEach((button) => {
-    button.addEventListener(('click'), () => {
-      console.log('sdfsfdsdffffffffffffffffffffffffffffff')
-    });
-  }
-  );
+  // const allButtons = document.querySelectorAll('button');
+  // allButtons.forEach((button) => {
+  //   button.addEventListener(('click'), () => {
+  //     console.log('sdfsfdsdffffffffffffffffffffffffffffff')
+  //   });
+  // }
+  // );
 }

@@ -32,6 +32,17 @@ const parser = (data) => {
 
 }
 
+const getUnique = (allPosts) => {
+    return allPosts.reduce((acc, item) => {
+        const isInAcc = acc.findIndex(object => object.itemLink === item.itemLink) //itemTitle, itemDescription, itemLink
+        if (isInAcc === -1) {
+            acc.push(item);
+        }
+        return acc;
+    }, []);
+}
+
+
 
 const app = () => {
     const state = {
@@ -55,7 +66,6 @@ const app = () => {
 
     const validate = (rssUrl) => {
         if (isDubble(rssUrl)) {
-            //watchedState.form.errors = 'sameRss';
             return new Promise((resolve, reject) => {
                 reject(new Error('sameRss'));
             });
@@ -65,27 +75,17 @@ const app = () => {
         return schema.validate(rssUrl);
     }
 
-    const form = document.querySelector('form');
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        watchedState.form.errors = null;
-        const formData = new FormData(event.target);
-        const rssUrl = formData.get('url')
-        validate(rssUrl)
-            // const schema = string().required().trim().url().nullable(); // пересмотреть и обработать ошибки валидации и пустая строка, переписать запрос через аксиос 
-            // schema.validate(rssUrl)
-            .then((data) => {
-                console.log(data);
-                // const isDubbled = isDubble(rssUrl);
-                if (data) {
-                    watchedState.form.status = 'sending';
+    const updatePost = (state) => {
+        const getNewPosts = () => {
+            return new Promise((resolve, reject) => {
+                state.feeds.forEach((feed) => {
                     axios({
                         method: 'get',
-                        url: `https://allorigins.hexlet.app/get?disableCache=true&url=${rssUrl}`,
+                        url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
                     })
                         .then((response) => {
-                            console.log(response);
+
                             if (response.status === 200) {
                                 return response.data;
                             };
@@ -98,26 +98,62 @@ const app = () => {
                                 watchedState.form.errors = parsedData;
                             } else {
                                 const { title, description, items } = parsedData;
-                                const feed = { title, description, link: rssUrl }; // id добавить lodash
-                                watchedState.feeds.push(feed);
-                                console.log(items)
-                                watchedState.posts = watchedState.posts.concat(items)
-                                form.reset();
-                                watchedState.form.isValid = true;
-                                watchedState.form.status = 'active';
+                                watchedState.posts = getUnique(state.posts.concat(items));
                             }
-                        })
-                        .then(() => {
-                            console.log('state.feeds.length', state.feeds.length)
-                            if (state.feeds.length < 2) {
-                                updatePost(state);
-                            }
-
+                            resolve()
+                        }
+                        )
+                        .catch((e) => {
+                            console.log(e);
                         });
-                }
+                })
+            });
+        }
+        getNewPosts();
+
+        setTimeout(() => {
+            updatePost(state)
+        }, 5000)
+    }
+
+
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        watchedState.form.errors = null;
+        const formData = new FormData(event.target);
+        const rssUrl = formData.get('url')
+        validate(rssUrl)
+            .then((data) => {
+                watchedState.form.status = 'sending';
+                axios({
+                    method: 'get',
+                    url: `https://allorigins.hexlet.app/get?disableCache=true&url=${rssUrl}`,
+                })
+                    .then((response) => {
+                        if (response.status === 200) {
+                            return response.data; // дописать сюда основную функцию  чтобы оставить только один then()
+                        };
+                        watchedState.form.errors = 'bad response';
+                        throw new Error('Network response was not ok.')
+                    })
+                    .then(data => {
+                        const parsedData = parser(data);
+                        if (typeof (parsedData) === 'string') {
+                            watchedState.form.errors = parsedData;
+                        } else {
+                            const { title, description, items } = parsedData;
+                            const feed = { title, description, link: rssUrl }; // id добавить lodash
+                            watchedState.feeds.push(feed);
+                            watchedState.posts = getUnique(state.posts.concat(items));
+                            form.reset();
+                            watchedState.form.isValid = true;
+                            watchedState.form.status = 'active';
+                        }
+                    })
             })
             .catch((err) => {
-                // console.log(err.message);
                 watchedState.form.isValid = false;
                 //обработать ошибку нестабильного интернет соединения
                 if (err.message === 'sameRss') {
@@ -126,55 +162,11 @@ const app = () => {
                     watchedState.form.errors = 'invalidUrl';
                 }
             })
-
     });
 
+    // добавить обработчик кнопки на показать больше поста
     updatePost(state);
-
 };
-
-
-const updatePost = (state) => {
-    //console.log(`update`)
-    if (state.feeds.length > 0) {
-        //console.log(`state.feeds.length > 0`)
-        const getNewPosts = () => {
-            return new Promise((resolve, reject) => {
-                state.feeds.forEach((feed) => {
-                    console.log(`feed`, feed)
-
-                    axios({
-                        method: 'get',
-                        url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
-                    })
-                        .then((response) => {
-                            console.log(state.feeds);
-                            // response
-                            resolve()
-                        }
-                        )
-
-                        .catch((e) => {
-                            console.log(e);
-                        });
-                })
-            });
-
-
-        }
-        return getNewPosts()
-            .then(() => {
-                setTimeout(() => {
-                    updatePost(state)
-                }, 5000)
-            }
-            );
-
-    }
-
-}
-
-
 
 export default app;
 
