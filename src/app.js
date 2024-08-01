@@ -8,28 +8,30 @@ import axios from 'axios';
 import view from './view/index.js'
 
 const parser = (data) => {
-    try {
-        const parser = new DOMParser();
-        const doc3 = parser.parseFromString(data.contents, "text/xml");
-        const channel = doc3.querySelector('channel');
-        const channelTitle = channel.querySelector('title');
-        const channelDescription = channel.querySelector('description');
-        const items = [...doc3.querySelectorAll('item')]
-            .map((item) => {
-                const itemTitle = item.querySelector('title').textContent;
-                const itemDescription = item.querySelector('description').textContent;
-                const itemLink = item.querySelector('link').textContent;
-                return { itemTitle, itemDescription, itemLink };
-            })
-        return {
-            title: channelTitle.textContent,
-            description: channelDescription.textContent,
-            items
-        };
-    } catch (err) {
-        return 'badResponse';
-    }
 
+    const parser = new DOMParser();
+    const doc3 = parser.parseFromString(data.contents, "text/xml");
+    const parsererror = doc3.querySelector('parsererror');
+    if(parsererror){
+        const error = new Error(parsererror.textContent);
+        error.isParsingError = true;
+         throw error;
+    }
+    const channel = doc3.querySelector('channel');
+    const channelTitle = channel.querySelector('title');
+    const channelDescription = channel.querySelector('description');
+    const items = [...doc3.querySelectorAll('item')]
+        .map((item) => {
+            const itemTitle = item.querySelector('title').textContent;
+            const itemDescription = item.querySelector('description').textContent;
+            const itemLink = item.querySelector('link').textContent;
+            return { itemTitle, itemDescription, itemLink };
+        })
+    return {
+        title: channelTitle.textContent,
+        description: channelDescription.textContent,
+        items
+    };
 }
 
 const getUnique = (allPosts) => {
@@ -71,7 +73,7 @@ const app = () => {
             });
 
         }
-        const schema = string().required().trim().url().nullable(); // пересмотреть и обработать ошибки валидации и пустая строка, переписать запрос через аксиос 
+        const schema = string().required().trim().url().nullable();
         return schema.validate(rssUrl);
     }
 
@@ -132,17 +134,9 @@ const app = () => {
                     url: `https://allorigins.hexlet.app/get?disableCache=true&url=${rssUrl}`,
                 })
                     .then((response) => {
-                        if (response.status === 200) {
-                            return response.data; // дописать сюда основную функцию  чтобы оставить только один then()
-                        };
-                        watchedState.form.errors = 'bad response';
-                        throw new Error('Network response was not ok.')
-                    })
-                    .then(data => {
-                        const parsedData = parser(data);
-                        if (typeof (parsedData) === 'string') {
-                            watchedState.form.errors = parsedData;
-                        } else {
+                        console.log(response);
+                        if (response.status >= 200 && response.status < 400) {
+                            const parsedData = parser(response.data);
                             const { title, description, items } = parsedData;
                             const feed = { title, description, link: rssUrl }; // id добавить lodash
                             watchedState.feeds.push(feed);
@@ -150,14 +144,22 @@ const app = () => {
                             form.reset();
                             watchedState.form.isValid = true;
                             watchedState.form.status = 'active';
-                        }
+                            return;
+                        };
+                        watchedState.form.errors = 'bad response';
+                        throw new Error('Network response was not ok.')
                     })
+                // .then(data => {
+
+                // })
             })
             .catch((err) => {
                 watchedState.form.isValid = false;
                 //обработать ошибку нестабильного интернет соединения
                 if (err.message === 'sameRss') {
                     watchedState.form.errors = 'sameRss';
+                } else if (err.isParsingError) {
+                    watchedState.form.errors = 'parseError';
                 } else {
                     watchedState.form.errors = 'invalidUrl';
                 }

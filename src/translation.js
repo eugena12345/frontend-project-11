@@ -4,7 +4,7 @@ export default {
     addRss: {
       success: 'RSS успешно загружен',
       fail: {
-        badResponse: 'Ресурс не содержит валидный RSS',
+        parseError: 'Ресурс не содержит валидный RSS',
         invalidUrl: 'Ссылка должна быть валидным URL',
         sameRss: 'RSS уже существует',
       }
