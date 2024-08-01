@@ -7,6 +7,7 @@ export default {
         parseError: 'Ресурс не содержит валидный RSS',
         invalidUrl: 'Ссылка должна быть валидным URL',
         sameRss: 'RSS уже существует',
+        networkError: 'Ошибка сети', 
       }
     },
   },

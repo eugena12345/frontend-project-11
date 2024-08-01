@@ -12,10 +12,13 @@ const parser = (data) => {
     const parser = new DOMParser();
     const doc3 = parser.parseFromString(data.contents, "text/xml");
     const parsererror = doc3.querySelector('parsererror');
-    if(parsererror){
-        const error = new Error(parsererror.textContent);
+  //  console.log('parsererror', parsererror);
+    console.log('parsererror.textContent', parsererror.textContent);
+    if (parsererror) {
+        console.log(parsererror.textContent);
+        const error = new Error('parsererror.textContent');
         error.isParsingError = true;
-         throw error;
+        throw error;
     }
     const channel = doc3.querySelector('channel');
     const channelTitle = channel.querySelector('title');
@@ -132,6 +135,7 @@ const app = () => {
                 axios({
                     method: 'get',
                     url: `https://allorigins.hexlet.app/get?disableCache=true&url=${rssUrl}`,
+                    timeout: 10000,
                 })
                     .then((response) => {
                         console.log(response);
@@ -146,21 +150,19 @@ const app = () => {
                             watchedState.form.status = 'active';
                             return;
                         };
-                        watchedState.form.errors = 'bad response';
-                        throw new Error('Network response was not ok.')
                     })
-                // .then(data => {
-
-                // })
             })
             .catch((err) => {
+                console.log(err);
                 watchedState.form.isValid = false;
                 //обработать ошибку нестабильного интернет соединения
                 if (err.message === 'sameRss') {
                     watchedState.form.errors = 'sameRss';
                 } else if (err.isParsingError) {
                     watchedState.form.errors = 'parseError';
-                } else {
+                } else if (err.isAxiosError) {
+                    watchedState.form.errors = 'networkError';
+                }else {
                     watchedState.form.errors = 'invalidUrl';
                 }
             })
