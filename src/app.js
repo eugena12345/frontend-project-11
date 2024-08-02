@@ -12,8 +12,8 @@ const parser = (data) => {
     const parser = new DOMParser();
     const doc3 = parser.parseFromString(data.contents, "text/xml");
     const parsererror = doc3.querySelector('parsererror');
-  //  console.log('parsererror', parsererror);
-    console.log('parsererror.textContent', parsererror.textContent);
+    // console.log('parsererror', parsererror);
+    // console.log('parsererror.textContent', parsererror.textContent);
     if (parsererror) {
         console.log(parsererror.textContent);
         const error = new Error('parsererror.textContent');
@@ -168,6 +168,14 @@ const app = () => {
             })
     });
 
+    const postsDiv = document.querySelector('.posts');
+    postsDiv.addEventListener('click', (event) => {
+        console.log('showPost');
+        console.log(event.target);
+        const id = event.target.getAttribute('data-id');
+        console.log('id', id);
+
+    })
     // добавить обработчик кнопки на показать больше поста
     updatePost(state);
 };

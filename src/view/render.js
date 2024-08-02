@@ -76,7 +76,7 @@ export const renderPosts = (posts) => {
     const buttonPost = document.createElement('button');
     buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     buttonPost.setAttribute('type', 'button');
-    buttonPost.setAttribute('data-id', '202');
+    buttonPost.setAttribute('data-id', 23); // add ID
     //buttonPost.setAttribute('data-bs-toggle', "modal");
     //buttonPost.setAttribute('data-bs-target', '#modal');
     buttonPost.textContent = 'Просмотр';
