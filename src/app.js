@@ -6,17 +6,18 @@ import renderAddRssResult, { renderDisable, renderFeeds } from './view/render';
 import i18next from 'i18next';
 import axios from 'axios';
 import view from './view/index.js'
+import uniqueId from 'lodash/uniqueId';
+
 
 const parser = (data) => {
 
     const parser = new DOMParser();
     const doc3 = parser.parseFromString(data.contents, "text/xml");
     const parsererror = doc3.querySelector('parsererror');
-    // console.log('parsererror', parsererror);
-    // console.log('parsererror.textContent', parsererror.textContent);
     if (parsererror) {
         console.log(parsererror.textContent);
         const error = new Error('parsererror.textContent');
+        console.log(error);
         error.isParsingError = true;
         throw error;
     }
@@ -37,14 +38,19 @@ const parser = (data) => {
     };
 }
 
-const getUnique = (allPosts) => {
-    return allPosts.reduce((acc, item) => {
-        const isInAcc = acc.findIndex(object => object.itemLink === item.itemLink) //itemTitle, itemDescription, itemLink
-        if (isInAcc === -1) {
-            acc.push(item);
+const addNewPosts = (oldItems, freshItems) => {
+    const newPosts = [];
+    freshItems.forEach((item) => {
+        const matchColl = oldItems.filter((oldItem) => oldItem.itemTitle === item.itemTitle);
+        if (matchColl.length > 0) {
+            //console.log(`match`);
+        } else {
+            item.id = uniqueId();
+            newPosts.push(item);
         }
-        return acc;
-    }, []);
+    })
+    const newUpdateArray = oldItems.concat(newPosts);
+    return newUpdateArray;
 }
 
 
@@ -56,25 +62,29 @@ const app = () => {
             isValid: false,
             errors: null,
         },
+        modal: {
+            show: false,
+            info: null,
+        },
         feeds: [],
         posts: [],
     };
+
     const watchedState = view(state, i18next);
-    // вынести в функцию валидация+ дублирование которая вернет промис
-    const isDubble = (rssUrl) => {
-        const links = state.feeds.map((feed) => feed.link);
-        if (links.length > 0 && links.includes(rssUrl)) {
-            return true;
-        }
-        return false;
-    };
 
     const validate = (rssUrl) => {
+        // notOneOf на самост работу
+        const isDubble = (rssUrl) => {
+            const links = state.feeds.map((feed) => feed.link);
+            if (links.length > 0 && links.includes(rssUrl)) {
+                return true;
+            }
+            return false;
+        };
         if (isDubble(rssUrl)) {
             return new Promise((resolve, reject) => {
                 reject(new Error('sameRss'));
             });
-
         }
         const schema = string().required().trim().url().nullable();
         return schema.validate(rssUrl);
@@ -103,7 +113,7 @@ const app = () => {
                                 watchedState.form.errors = parsedData;
                             } else {
                                 const { title, description, items } = parsedData;
-                                watchedState.posts = getUnique(state.posts.concat(items));
+                                watchedState.posts = addNewPosts(state.posts, items);
                             }
                             resolve()
                         }
@@ -138,45 +148,40 @@ const app = () => {
                     timeout: 10000,
                 })
                     .then((response) => {
-                        console.log(response);
                         if (response.status >= 200 && response.status < 400) {
                             const parsedData = parser(response.data);
                             const { title, description, items } = parsedData;
-                            const feed = { title, description, link: rssUrl }; // id добавить lodash
+                            const feed = { title, description, link: rssUrl, id: uniqueId() };
                             watchedState.feeds.push(feed);
-                            watchedState.posts = getUnique(state.posts.concat(items));
+                            watchedState.posts = addNewPosts(state.posts, items); 
                             form.reset();
                             watchedState.form.isValid = true;
                             watchedState.form.status = 'active';
                             return;
                         };
                     })
+                    .catch((err) => {
+                        watchedState.form.isValid = false;
+                        if (err.message === 'Network Error') {
+                            watchedState.form.errors = 'networkError';
+                        } else if (err.isParsingError) {
+                            watchedState.form.errors = 'parseError';
+                        };
+                        watchedState.form.status = 'active';
+
+                    })
             })
             .catch((err) => {
-                console.log(err);
                 watchedState.form.isValid = false;
-                //обработать ошибку нестабильного интернет соединения
+
                 if (err.message === 'sameRss') {
                     watchedState.form.errors = 'sameRss';
-                } else if (err.isParsingError) {
-                    watchedState.form.errors = 'parseError';
-                } else if (err.isAxiosError) {
-                    watchedState.form.errors = 'networkError';
-                }else {
+                } else {
                     watchedState.form.errors = 'invalidUrl';
                 }
             })
     });
-
-    const postsDiv = document.querySelector('.posts');
-    postsDiv.addEventListener('click', (event) => {
-        console.log('showPost');
-        console.log(event.target);
-        const id = event.target.getAttribute('data-id');
-        console.log('id', id);
-
-    })
-    // добавить обработчик кнопки на показать больше поста
+   
     updatePost(state);
 };
 

@@ -73,21 +73,28 @@ export const renderPosts = (posts) => {
     link.setAttribute('href', post.itemLink);
     link.setAttribute('data-id', 2); // add ID
     link.text = post.itemTitle;
-    const buttonPost = document.createElement('button');
-    buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    buttonPost.setAttribute('type', 'button');
-    buttonPost.setAttribute('data-id', 23); // add ID
-    //buttonPost.setAttribute('data-bs-toggle', "modal");
-    //buttonPost.setAttribute('data-bs-target', '#modal');
-    buttonPost.textContent = 'Просмотр';
-    buttonPost.addEventListener('click', () => {
-      console.log('click show details');
-    });
-    postItem.append(link, buttonPost);
+const button = document.createElement('div');
+button.innerHTML = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+Launch demo modal
+</button>`;
+    
+    // const buttonPost = document.createElement('button');
+    // buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    // buttonPost.setAttribute('type', 'button');
+    // buttonPost.setAttribute('data-id', 23); // add ID
+    // buttonPost.textContent = 'Просмотр';
+    // // buttonPost.dataset.bsToggle = 'modal';
+    // // buttonPost.dataset.bsTarget = '#modal';
+    postItem.append(link, button); //buttonPost
     ulPosts.append(postItem);
 
   })
   postsElement.append(elementTitle, ulPosts);
+
+  {/* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button> */}
+
   // const allButtons = document.querySelectorAll('button');
   // allButtons.forEach((button) => {
   //   button.addEventListener(('click'), () => {
@@ -95,4 +102,55 @@ export const renderPosts = (posts) => {
   //   });
   // }
   // );
+}
+
+export const renderModal = (info) => {
+  const body = document.body;
+
+  // const modal = document.createElement('div');
+  const modal = document.querySelector('.modal');
+  console.log(modal);
+//   modal.innerHTML = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+//   Launch demo modal
+// </button>`;
+  
+
+  // body.classList.add('modal-open');
+  // body.setAttribute('style', 'overflow: hidden; padding-right: 14px')
+  // modal.classList.add('modal', 'fade', 'show');
+  // modal.setAttribute('style', 'display: block');
+  // modal.setAttribute('tabindex', '-1');
+  // modal.setAttribute('aria-modal', 'true');
+  // modal.setAttribute('data-bs-backdrop', 'static'); 
+  // modal.innerHTML = (`<div class="modal-dialog">
+  //       <div class="modal-content">
+  //         <div class="modal-header">
+  //           <h5 class="modal-title">${info.itemTitle}</h5>
+  //           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  //         </div>
+  //         <div class="modal-body">
+  //           <p>${info.itemDescription}</p>
+  //         </div>
+  //         <div class="modal-footer">
+  //           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  //           <button type="button" class="btn btn-primary">Save changes</button>
+  //         </div>
+  //       </div>
+  //     </div>`)
+
+
+
+
+      
+ // body.prepend(modal);
+
+  // const closeButton = document.querySelector('.btn-close');
+  // //console.log(closeButton);
+  // closeButton.addEventListener('click', (e) => {
+  //   e.preventDefault()
+  //     modal.remove();
+  //     body.removeAttribute('style', 'overflow: hidden; padding-right: 14px');
+  //     body.classList.remove('modal-open');
+  //     //modal.style.display = 'none';
+  // })
 }
