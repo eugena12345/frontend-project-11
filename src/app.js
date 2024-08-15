@@ -73,20 +73,8 @@ const app = () => {
     const watchedState = view(state, i18next);
 
     const validate = (rssUrl) => {
-        // notOneOf на самост работу
-        const isDubble = (rssUrl) => {
-            const links = state.feeds.map((feed) => feed.link);
-            if (links.length > 0 && links.includes(rssUrl)) {
-                return true;
-            }
-            return false;
-        };
-        if (isDubble(rssUrl)) {
-            return new Promise((resolve, reject) => {
-                reject(new Error('sameRss'));
-            });
-        }
-        const schema = string().required().trim().url().nullable();
+        const links = state.feeds.map((feed) => feed.link);
+        const schema = string().required().trim().url().nullable().notOneOf(links);
         return schema.validate(rssUrl);
     }
 
@@ -153,7 +141,7 @@ const app = () => {
                             const { title, description, items } = parsedData;
                             const feed = { title, description, link: rssUrl, id: uniqueId() };
                             watchedState.feeds.push(feed);
-                            watchedState.posts = addNewPosts(state.posts, items); 
+                            watchedState.posts = addNewPosts(state.posts, items);
                             form.reset();
                             watchedState.form.isValid = true;
                             watchedState.form.status = 'active';
@@ -172,16 +160,18 @@ const app = () => {
                     })
             })
             .catch((err) => {
+                console.log(err.type);
+
                 watchedState.form.isValid = false;
 
-                if (err.message === 'sameRss') {
+                if (err.type === 'notOneOf') {
                     watchedState.form.errors = 'sameRss';
                 } else {
                     watchedState.form.errors = 'invalidUrl';
                 }
             })
     });
-   
+
     updatePost(state);
 };
 
