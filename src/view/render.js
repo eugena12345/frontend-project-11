@@ -73,19 +73,19 @@ export const renderPosts = (posts) => {
     link.setAttribute('href', post.itemLink);
     link.setAttribute('data-id', 2); // add ID
     link.text = post.itemTitle;
-const button = document.createElement('div');
-button.innerHTML = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-Launch demo modal
-</button>`;
+//const button = document.createElement('div');
+// button.innerHTML = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+// Launch demo modal
+// </button>`;
     
-    // const buttonPost = document.createElement('button');
-    // buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    // buttonPost.setAttribute('type', 'button');
-    // buttonPost.setAttribute('data-id', 23); // add ID
-    // buttonPost.textContent = 'Просмотр';
-    // // buttonPost.dataset.bsToggle = 'modal';
-    // // buttonPost.dataset.bsTarget = '#modal';
-    postItem.append(link, button); //buttonPost
+     const buttonPost = document.createElement('button');
+     buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+     buttonPost.setAttribute('type', 'button');
+     buttonPost.setAttribute('data-id', post.id); // add ID
+     buttonPost.textContent = 'Просмотр';
+     buttonPost.dataset.bsToggle = 'modal';
+     buttonPost.dataset.bsTarget = '#exampleModal';
+    postItem.append(link, buttonPost); //  button
     ulPosts.append(postItem);
 
   })
