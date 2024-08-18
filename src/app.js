@@ -64,10 +64,11 @@ const app = () => {
         },
         modal: {
             show: false,
-            info: null,
+            currentPost: null,
         },
         feeds: [],
         posts: [],
+        visitedLinkIds: [],
     };
 
     const watchedState = view(state, i18next);
@@ -177,8 +178,11 @@ const app = () => {
     const modal = document.querySelector('.modal');
     modal.addEventListener('show.bs.modal', (event) => {
         const clickedButton = event.relatedTarget;
-        const id = clickedButton.getAttribute('data-id')
+        const id = clickedButton.getAttribute('data-id');
         const currentPost = state.posts.filter((post) => post.id === id)[0];
+        watchedState.modal.currentPost = currentPost;
+        watchedState.visitedLinkIds = [...state.visitedLinkIds, id];
+// перенести в рендер
         const modalTitle = modal.querySelector('.modal-title');
         modalTitle.textContent = currentPost.itemTitle;
         const modalBody = modal.querySelector('.modal-body');
@@ -186,6 +190,17 @@ const app = () => {
         const readMoreButton = modal.querySelector('.btn-primary');
         readMoreButton.setAttribute('onclick', `window.open("${currentPost.itemLink}")`);
     });
+
+    const posts = document.querySelector('.posts');
+    posts.addEventListener('click', (event) => {
+        event.preventDefault();
+        const clickedElement = event.target;
+        if (clickedElement.tagName === 'A') {
+            clickedElement.onClick = window.open(clickedElement.href, '_blank');
+            const linkId = clickedElement.getAttribute('data-id');
+            watchedState.visitedLinkIds = [...state.visitedLinkIds, linkId];
+        }
+    })
 
 };
 
