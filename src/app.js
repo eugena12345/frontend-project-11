@@ -175,18 +175,18 @@ const app = () => {
     updatePost(state);
 
     const modal = document.querySelector('.modal');
-modal.addEventListener('show.bs.modal', (event) => {
-    const clickedButton = event.relatedTarget;
-    const id = clickedButton.getAttribute('data-id')
-    const currentPost = state.posts.filter((post) => post.id === id)[0];
-    console.log(currentPost);
-    const modalTitle = modal.querySelector('.modal-title');
-    console.log('modalTitle',modalTitle);
+    modal.addEventListener('show.bs.modal', (event) => {
+        const clickedButton = event.relatedTarget;
+        const id = clickedButton.getAttribute('data-id')
+        const currentPost = state.posts.filter((post) => post.id === id)[0];
+        const modalTitle = modal.querySelector('.modal-title');
+        modalTitle.textContent = currentPost.itemTitle;
+        const modalBody = modal.querySelector('.modal-body');
+        modalBody.textContent = currentPost.itemDescription;
+        const readMoreButton = modal.querySelector('.btn-primary');
+        readMoreButton.setAttribute('onclick', `window.open("${currentPost.itemLink}")`);
+    });
 
-    modalTitle.textContent = currentPost.itemTitle;
-    const modalBody = modal.querySelector('.modal-body');
-    modalBody.textContent = currentPost.itemDescription;
-})
 };
 
 export default app;
