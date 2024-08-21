@@ -82,7 +82,7 @@ export const renderPosts = (posts, visitedLinkIds, i18next) => {
     buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     buttonPost.setAttribute('type', 'button');
     buttonPost.setAttribute('data-id', post.id);
-    buttonPost.textContent = i18next.t('showPost');;
+    buttonPost.textContent = i18next.t('showPost');
     buttonPost.dataset.bsToggle = 'modal';
     buttonPost.dataset.bsTarget = '#exampleModal';
     postItem.append(link, buttonPost);
