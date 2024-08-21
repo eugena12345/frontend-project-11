@@ -1,8 +1,8 @@
 import i18next from 'i18next';
 import app from './app';
-import ru from './translation.js';
+import ru from './translation';
 
-
+// './translation.js';
 
 i18next.init({
   lng: 'ru', // Текущий язык

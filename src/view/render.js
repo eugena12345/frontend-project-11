@@ -28,7 +28,6 @@ export const renderDisable = (status) => {
     inputElement.classList.remove('is-invalid');
     feedbackDiv.classList.remove('text-danger');
     feedbackDiv.textContent = '';
-
   }
   if (status === 'active') {
     button.removeAttribute('disabled');
@@ -39,34 +38,34 @@ export const renderFeeds = (feeds) => {
   const feedsElement = document.querySelector('.feeds');
   feedsElement.textContent = '';
   const elementTitle = document.createElement('h3');
-  elementTitle.textContent = "Фиды";
+  elementTitle.textContent = 'Фиды';
   const ulFeeds = document.createElement('ul');
-  ulFeeds.classList.add("list-group", "border-0", "rounded-0");
+  ulFeeds.classList.add('list-group', 'border-0', 'rounded-0');
   feeds.forEach((feed) => {
     const feedItem = document.createElement('li');
-    feedItem.classList.add("list-group-item", "border-0", "border-end-0")
+    feedItem.classList.add('list-group-item', 'border-0', 'border-end-0');
     const title = document.createElement('h3');
-    title.classList.add("h6", "m-0");
+    title.classList.add('h6', 'm-0');
     title.textContent = feed.title;
     const description = document.createElement('p');
-    description.classList.add("m-0", "small", "text-black-50")
+    description.classList.add('m-0', 'small', 'text-black-50');
     description.textContent = feed.description;
     feedItem.append(title, description);
-    ulFeeds.append(feedItem)
-  })
+    ulFeeds.append(feedItem);
+  });
   feedsElement.append(elementTitle, ulFeeds);
-}
+};
 
 export const renderPosts = (posts, visitedLinkIds) => {
   const postsElement = document.querySelector('.posts');
   postsElement.textContent = '';
   const elementTitle = document.createElement('h3');
-  elementTitle.textContent = "Посты";
+  elementTitle.textContent = 'Посты';
   const ulPosts = document.createElement('ul');
-  ulPosts.classList.add("list-group", "border-0", "rounded-0");
+  ulPosts.classList.add('list-group', 'border-0', 'rounded-0');
   posts.forEach((post) => {
     const postItem = document.createElement('li');
-    postItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-start", "border-0", "border-end-0");
+    postItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const link = document.createElement('a');
     if (visitedLinkIds.includes(post.id)) {
       link.classList.add('fw-normal', 'link-secondary');
@@ -86,7 +85,6 @@ export const renderPosts = (posts, visitedLinkIds) => {
     buttonPost.dataset.bsTarget = '#exampleModal';
     postItem.append(link, buttonPost);
     ulPosts.append(postItem);
-
-  })
+  });
   postsElement.append(elementTitle, ulPosts);
-}
+};
