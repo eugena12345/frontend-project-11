@@ -8,12 +8,14 @@ export const renderAddRssResult = (state, i18next) => {
     feedbackDiv.classList.add('text-danger');
     feedbackDiv.textContent = '';
     feedbackDiv.textContent = i18next.t(`addRss.fail.${state.form.errors}`);
+    inputElement.focus();
   } else {
     inputElement.classList.remove('is-invalid');
     feedbackDiv.classList.remove('text-danger');
     feedbackDiv.textContent = '';
     feedbackDiv.textContent = i18next.t('addRss.success');
     form.reset();
+    inputElement.focus();
   }
 };
 
