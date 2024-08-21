@@ -1,9 +1,11 @@
 import onChange from 'on-change';
 import {
-  renderAddRssResult, renderDisable, renderFeeds, renderPosts, renderModal,
-} from './render.js';
+  renderAddRssResult, renderDisable, renderFeeds, renderPosts,
+} from './render';
+// .js
+// renderModal,
 
-export default (state, i18next) => onChange(state, (path, value, previousValue) => {
+export default (state, i18next) => onChange(state, (path) => { // , value, previousValue
   if (path === 'form.isValid') {
     renderAddRssResult(state, i18next);
   }

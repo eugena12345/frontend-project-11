@@ -1,21 +1,21 @@
 import './styles.scss';
 import 'bootstrap';
 import { string } from 'yup';
-import onChange from 'on-change';
+// import onChange from 'on-change';
 import i18next from 'i18next';
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
-import view from './view/index.js';
-import renderAddRssResult, { renderDisable, renderFeeds } from './view/render';
+import view from './view/index';
+// import renderAddRssResult, { renderDisable, renderFeeds } from './view/render';
 
 const parser = (data) => {
-  const parser = new DOMParser();
-  const doc3 = parser.parseFromString(data.contents, 'text/xml');
+  const parserForData = new DOMParser();
+  const doc3 = parserForData.parseFromString(data.contents, 'text/xml');
   const parsererror = doc3.querySelector('parsererror');
   if (parsererror) {
-    console.log(parsererror.textContent);
+    //  console.log(parsererror.textContent);
     const error = new Error('parsererror.textContent');
-    console.log(error);
+    //  console.log(error);
     error.isParsingError = true;
     throw error;
   }
@@ -43,8 +43,9 @@ const addNewPosts = (oldItems, freshItems) => {
     if (matchColl.length > 0) {
       // console.log(`match`);
     } else {
-      item.id = uniqueId();
-      newPosts.push(item);
+      const newItem = { ...item };
+      newItem.id = uniqueId();
+      newPosts.push(newItem);
     }
   });
   const newUpdateArray = oldItems.concat(newPosts);
@@ -77,9 +78,9 @@ const app = () => {
     return schema.validate(rssUrl);
   };
 
-  const updatePost = (state) => {
-    const getNewPosts = () => new Promise((resolve, reject) => {
-      state.feeds.forEach((feed) => {
+  const updatePost = (stateForUpdate) => {
+    const getNewPosts = () => new Promise((resolve) => { // , reject
+      stateForUpdate.feeds.forEach((feed) => {
         axios({
           method: 'get',
           url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
@@ -96,14 +97,14 @@ const app = () => {
             if (typeof (parsedData) === 'string') {
               watchedState.form.errors = parsedData;
             } else {
-              const { title, description, items } = parsedData;
-              watchedState.posts = addNewPosts(state.posts, items);
+              const { items } = parsedData;
+              watchedState.posts = addNewPosts(stateForUpdate.posts, items);
             }
             resolve();
-          })
-          .catch((e) => {
-            console.log(e);
           });
+        //   .catch((e) => {
+        //     // console.log(e);
+        //   });
       });
     });
     getNewPosts();
@@ -121,7 +122,7 @@ const app = () => {
     const formData = new FormData(event.target);
     const rssUrl = formData.get('url');
     validate(rssUrl)
-      .then((data) => {
+      .then(() => {
         watchedState.form.status = 'sending';
         axios({
           method: 'get',
@@ -153,7 +154,7 @@ const app = () => {
           });
       })
       .catch((err) => {
-        console.log(err.type);
+        // console.log(err.type);
 
         watchedState.form.isValid = false;
 
@@ -194,7 +195,7 @@ const app = () => {
     }
   });
 
-  // устанавливается фокус после прохожденя валидации 
+  // устанавливается фокус после прохожденя валидации
   // валидация на пустое = Не должно быть пустым,
   // Просмотр i18next для кнопки возле поста
 };
