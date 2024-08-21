@@ -72,7 +72,7 @@ const app = () => {
 
   const validate = (rssUrl) => {
     const links = state.feeds.map((feed) => feed.link);
-    const schema = string().required().trim().url()
+    const schema = string().trim().required().url()
       .nullable()
       .notOneOf(links);
     return schema.validate(rssUrl);
@@ -194,9 +194,7 @@ const app = () => {
       watchedState.visitedLinkIds = [...state.visitedLinkIds, linkId];
     }
   });
-
   // валидация на пустое = Не должно быть пустым,
-  // Просмотр i18next для кнопки возле поста
 };
 
 export default app;

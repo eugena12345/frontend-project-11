@@ -58,7 +58,7 @@ export const renderFeeds = (feeds) => {
   feedsElement.append(elementTitle, ulFeeds);
 };
 
-export const renderPosts = (posts, visitedLinkIds) => {
+export const renderPosts = (posts, visitedLinkIds, i18next) => {
   const postsElement = document.querySelector('.posts');
   postsElement.textContent = '';
   const elementTitle = document.createElement('h3');
@@ -82,7 +82,7 @@ export const renderPosts = (posts, visitedLinkIds) => {
     buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     buttonPost.setAttribute('type', 'button');
     buttonPost.setAttribute('data-id', post.id);
-    buttonPost.textContent = 'Просмотр';
+    buttonPost.textContent = i18next.t('showPost');;
     buttonPost.dataset.bsToggle = 'modal';
     buttonPost.dataset.bsTarget = '#exampleModal';
     postItem.append(link, buttonPost);

@@ -1,6 +1,6 @@
 export default {
   translation: {
-    key: 'Привет мир!',
+    // key: 'Привет мир!',
     addRss: {
       success: 'RSS успешно загружен',
       fail: {
@@ -10,5 +10,6 @@ export default {
         networkError: 'Ошибка сети',
       },
     },
+    showPost: 'Просмотр',
   },
 };
