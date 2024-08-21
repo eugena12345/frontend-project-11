@@ -1,21 +1,17 @@
 import './styles.scss';
 import 'bootstrap';
 import { string } from 'yup';
-// import onChange from 'on-change';
 import i18next from 'i18next';
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view from './view/index';
-// import renderAddRssResult, { renderDisable, renderFeeds } from './view/render';
 
 const parser = (data) => {
   const parserForData = new DOMParser();
   const doc3 = parserForData.parseFromString(data.contents, 'text/xml');
   const parsererror = doc3.querySelector('parsererror');
   if (parsererror) {
-    //  console.log(parsererror.textContent);
     const error = new Error('parsererror.textContent');
-    //  console.log(error);
     error.isParsingError = true;
     throw error;
   }
@@ -79,7 +75,7 @@ const app = () => {
   };
 
   const updatePost = (stateForUpdate) => {
-    const getNewPosts = () => new Promise((resolve) => { // , reject
+    const getNewPosts = () => new Promise((resolve) => {
       stateForUpdate.feeds.forEach((feed) => {
         axios({
           method: 'get',
@@ -154,10 +150,7 @@ const app = () => {
           });
       })
       .catch((err) => {
-        // console.log(err.type);
-
         watchedState.form.isValid = false;
-
         if (err.type === 'notOneOf') {
           watchedState.form.errors = 'sameRss';
         } else {
@@ -175,13 +168,6 @@ const app = () => {
     const currentPost = state.posts.filter((post) => post.id === id)[0];
     watchedState.modal.currentPost = currentPost;
     watchedState.visitedLinkIds = [...state.visitedLinkIds, id];
-    // перенести в рендер
-    const modalTitle = modal.querySelector('.modal-title');
-    modalTitle.textContent = currentPost.itemTitle;
-    const modalBody = modal.querySelector('.modal-body');
-    modalBody.textContent = currentPost.itemDescription;
-    const readMoreButton = modal.querySelector('.btn-primary');
-    readMoreButton.setAttribute('onclick', `window.open("${currentPost.itemLink}")`);
   });
 
   const posts = document.querySelector('.posts');

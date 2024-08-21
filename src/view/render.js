@@ -90,3 +90,13 @@ export const renderPosts = (posts, visitedLinkIds, i18next) => {
   });
   postsElement.append(elementTitle, ulPosts);
 };
+
+export const renderModal = (currentPost) => {
+  const modal = document.querySelector('.modal');
+  const modalTitle = modal.querySelector('.modal-title');
+  modalTitle.textContent = currentPost.itemTitle;
+  const modalBody = modal.querySelector('.modal-body');
+  modalBody.textContent = currentPost.itemDescription;
+  const readMoreButton = modal.querySelector('.btn-primary');
+  readMoreButton.setAttribute('onclick', `window.open("${currentPost.itemLink}")`);
+};
