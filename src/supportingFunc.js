@@ -14,7 +14,7 @@ export const parser = (data) => {
   const doc3 = parserForData.parseFromString(data.contents, 'text/xml');
   const parsererror = doc3.querySelector('parsererror');
   if (parsererror) {
-    const error = new Error('parsererror.textContent');
+    const error = new Error(parsererror.textContent);
     error.isParsingError = true;
     throw error;
   }
@@ -44,10 +44,12 @@ export const addNewPosts = (oldItems, freshItems) => {
     } else {
       const newItem = { ...item };
       newItem.id = uniqueId();
-      newPosts.push(newItem);
+      newPosts.unshift(newItem);
     }
   });
-  const newUpdateArray = oldItems.concat(newPosts);
+  // const newUpdateArray = oldItems.concat(newPosts);
+  const newUpdateArray = newPosts.concat(oldItems);
+
   return newUpdateArray;
 };
 

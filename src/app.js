@@ -48,7 +48,7 @@ const app = () => {
               const feed = {
                 title, description, link: rssUrl, id: uniqueId(),
               };
-              watchedState.feeds.push(feed);
+              watchedState.feeds.unshift(feed);
               watchedState.posts = addNewPosts(state.posts, items);
               form.reset();
               watchedState.form.isValid = true;
