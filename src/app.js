@@ -1,11 +1,11 @@
 import './styles.scss';
 import 'bootstrap';
-import { string } from 'yup';
 import i18next from 'i18next';
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view from './view/index';
 import ru from './translation';
+import validate from './validate';
 
 const parser = (data) => {
   const parserForData = new DOMParser();
@@ -69,14 +69,6 @@ const app = () => {
 
   const watchedState = view(state, i18next);
 
-  const validate = (rssUrl) => {
-    const links = state.feeds.map((feed) => feed.link);
-    const schema = string().trim().required().url()
-      .nullable()
-      .notOneOf(links);
-    return schema.validate(rssUrl);
-  };
-
   const updatePost = (stateForUpdate) => {
     const getNewPosts = () => new Promise((resolve) => {
       stateForUpdate.feeds.forEach((feed) => {
@@ -120,7 +112,7 @@ const app = () => {
     watchedState.form.errors = null;
     const formData = new FormData(event.target);
     const rssUrl = formData.get('url');
-    validate(rssUrl)
+    validate(rssUrl, state.feeds)
       .then(() => {
         watchedState.form.status = 'sending';
         axios({
