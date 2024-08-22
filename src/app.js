@@ -49,6 +49,8 @@ const addNewPosts = (oldItems, freshItems) => {
   return newUpdateArray;
 };
 
+const getFeedUrl = (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${link}`;
+
 const app = () => {
   const state = {
     form: {
@@ -80,7 +82,8 @@ const app = () => {
       stateForUpdate.feeds.forEach((feed) => {
         axios({
           method: 'get',
-          url: `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
+          url: getFeedUrl(feed.link),
+          // `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
         })
           .then((response) => {
             if (response.status === 200) {
