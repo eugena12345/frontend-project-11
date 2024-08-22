@@ -5,51 +5,8 @@ import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view from './view/index';
 import ru from './translation';
-import validate from './validate';
-
-const parser = (data) => {
-  const parserForData = new DOMParser();
-  const doc3 = parserForData.parseFromString(data.contents, 'text/xml');
-  const parsererror = doc3.querySelector('parsererror');
-  if (parsererror) {
-    const error = new Error('parsererror.textContent');
-    error.isParsingError = true;
-    throw error;
-  }
-  const channel = doc3.querySelector('channel');
-  const channelTitle = channel.querySelector('title');
-  const channelDescription = channel.querySelector('description');
-  const items = [...doc3.querySelectorAll('item')]
-    .map((item) => {
-      const itemTitle = item.querySelector('title').textContent;
-      const itemDescription = item.querySelector('description').textContent;
-      const itemLink = item.querySelector('link').textContent;
-      return { itemTitle, itemDescription, itemLink };
-    });
-  return {
-    title: channelTitle.textContent,
-    description: channelDescription.textContent,
-    items,
-  };
-};
-
-const addNewPosts = (oldItems, freshItems) => {
-  const newPosts = [];
-  freshItems.forEach((item) => {
-    const matchColl = oldItems.filter((oldItem) => oldItem.itemTitle === item.itemTitle);
-    if (matchColl.length > 0) {
-      // console.log(`match`);
-    } else {
-      const newItem = { ...item };
-      newItem.id = uniqueId();
-      newPosts.push(newItem);
-    }
-  });
-  const newUpdateArray = oldItems.concat(newPosts);
-  return newUpdateArray;
-};
-
-const getFeedUrl = (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${link}`;
+import validate, { getFeedUrl, parser, addNewPosts } from './supportingFunc';
+import updatePost from './updatePost';
 
 const app = () => {
   const state = {
@@ -68,42 +25,6 @@ const app = () => {
   };
 
   const watchedState = view(state, i18next);
-
-  const updatePost = (stateForUpdate) => {
-    const getNewPosts = () => new Promise((resolve) => {
-      stateForUpdate.feeds.forEach((feed) => {
-        axios({
-          method: 'get',
-          url: getFeedUrl(feed.link),
-        })
-          .then((response) => {
-            if (response.status === 200) {
-              return response.data;
-            }
-            watchedState.form.errors = 'bad response';
-            throw new Error('Network response was not ok.');
-          })
-          .then((data) => {
-            const parsedData = parser(data);
-            if (typeof (parsedData) === 'string') {
-              watchedState.form.errors = parsedData;
-            } else {
-              const { items } = parsedData;
-              watchedState.posts = addNewPosts(stateForUpdate.posts, items);
-            }
-            resolve();
-          });
-        //   .catch((e) => {
-        //     // console.log(e);
-        //   });
-      });
-    });
-    getNewPosts();
-
-    setTimeout(() => {
-      updatePost(state);
-    }, 5000);
-  };
 
   const form = document.querySelector('form');
 
