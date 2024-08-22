@@ -1,16 +1,16 @@
-import i18next from 'i18next';
-import app from './app';
-import ru from './translation';
+// import i18next from 'i18next';
+import runApp from './app';
+// import ru from './translation';
 
-// './translation.js';
+runApp();
 
-i18next.init({
-  lng: 'ru', // Текущий язык
-  debug: false,
-  resources: {
-    ru,
-  },
-})
-  .then(() => {
-    app();
-  });
+// i18next.init({
+//   lng: 'ru',
+//   debug: false,
+//   resources: {
+//     ru,
+//   },
+// })
+//   .then(() => {
+//     app();
+//   });

@@ -5,6 +5,7 @@ import i18next from 'i18next';
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view from './view/index';
+import ru from './translation';
 
 const parser = (data) => {
   const parserForData = new DOMParser();
@@ -180,7 +181,17 @@ const app = () => {
       watchedState.visitedLinkIds = [...state.visitedLinkIds, linkId];
     }
   });
-  // валидация на пустое = Не должно быть пустым,
 };
 
-export default app;
+export default () => {
+  i18next.init({
+    lng: 'ru',
+    debug: false,
+    resources: {
+      ru,
+    },
+  })
+    .then(() => {
+      app();
+    });
+};
