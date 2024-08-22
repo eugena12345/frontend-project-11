@@ -83,7 +83,6 @@ const app = () => {
         axios({
           method: 'get',
           url: getFeedUrl(feed.link),
-          // `https://allorigins.hexlet.app/get?disableCache=true&url=${feed.link}`,
         })
           .then((response) => {
             if (response.status === 200) {
@@ -126,7 +125,7 @@ const app = () => {
         watchedState.form.status = 'sending';
         axios({
           method: 'get',
-          url: `https://allorigins.hexlet.app/get?disableCache=true&url=${rssUrl}`,
+          url: getFeedUrl(rssUrl),
           timeout: 10000,
         })
           .then((response) => {
