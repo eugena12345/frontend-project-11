@@ -75,8 +75,7 @@ const app = () => {
   modal.addEventListener('show.bs.modal', (event) => {
     const clickedButton = event.relatedTarget;
     const id = clickedButton.getAttribute('data-id');
-    const currentPost = state.posts.filter((post) => post.id === id)[0];
-    watchedState.modal.currentPost = currentPost;
+    watchedState.modal.currentPost = id;
     watchedState.visitedLinkIds = [...state.visitedLinkIds, id];
   });
 

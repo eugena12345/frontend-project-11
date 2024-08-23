@@ -92,7 +92,8 @@ export const renderPosts = (posts, visitedLinkIds, i18next) => {
   postsElement.append(elementTitle, ulPosts);
 };
 
-export const renderModal = (currentPost) => {
+export const renderModal = (posts, currentPostId) => {
+  const currentPost = posts.filter((post) => post.id === currentPostId)[0];
   const modal = document.querySelector('.modal');
   const modalTitle = modal.querySelector('.modal-title');
   modalTitle.textContent = currentPost.itemTitle;
