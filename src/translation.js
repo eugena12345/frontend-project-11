@@ -8,6 +8,7 @@ export default {
         invalidUrl: 'Ссылка должна быть валидным URL',
         sameRss: 'RSS уже существует',
         networkError: 'Ошибка сети',
+        unknownError: 'Неизвестная ошибка',
       },
     },
     showPost: 'Просмотр',

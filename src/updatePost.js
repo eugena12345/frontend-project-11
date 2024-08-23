@@ -1,6 +1,8 @@
 import axios from 'axios';
 import i18next from 'i18next';
-import { getFeedUrl, parser, addNewPosts } from './supportingFunc';
+import {
+  getFeedUrl, parser, addNewPosts,
+} from './supportingFunc';
 import view from './view/index';
 
 const updatePost = (stateForUpdate) => {
@@ -19,8 +21,8 @@ const updatePost = (stateForUpdate) => {
           resolve();
         });
       // .catch((e) => {
-      //   console.log(e);
-      //   throw new Error('Network response was not ok.');
+      //   console.log(getErrorType(e));
+
       // });
     });
   });

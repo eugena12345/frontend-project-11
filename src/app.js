@@ -5,7 +5,9 @@ import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view from './view/index';
 import ru from './translation';
-import validate, { getFeedUrl, parser, addNewPosts } from './supportingFunc';
+import validate, {
+  getFeedUrl, parser, addNewPosts, getErrorType,
+} from './supportingFunc';
 import updatePost from './updatePost';
 
 const app = () => {
@@ -57,21 +59,13 @@ const app = () => {
           })
           .catch((err) => {
             watchedState.form.isValid = false;
-            if (err.message === 'Network Error') {
-              watchedState.form.errors = 'networkError';
-            } else if (err.isParsingError) {
-              watchedState.form.errors = 'parseError';
-            }
+            watchedState.form.errors = getErrorType(err);
             watchedState.form.status = 'active';
           });
       })
       .catch((err) => {
         watchedState.form.isValid = false;
-        if (err.type === 'notOneOf') {
-          watchedState.form.errors = 'sameRss';
-        } else {
-          watchedState.form.errors = 'invalidUrl';
-        }
+        watchedState.form.errors = getErrorType(err);
       });
   });
 
@@ -88,10 +82,8 @@ const app = () => {
 
   const posts = document.querySelector('.posts');
   posts.addEventListener('click', (event) => {
-    event.preventDefault();
     const clickedElement = event.target;
     if (clickedElement.tagName === 'A') {
-      clickedElement.onClick = window.open(clickedElement.href, '_blank');
       const linkId = clickedElement.getAttribute('data-id');
       watchedState.visitedLinkIds = [...state.visitedLinkIds, linkId];
     }

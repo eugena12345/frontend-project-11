@@ -1,5 +1,6 @@
 import { string } from 'yup';
 import uniqueId from 'lodash/uniqueId';
+import axios from 'axios';
 
 export default (rssUrl, feeds) => {
   const links = feeds.map((feed) => feed.link);
@@ -54,3 +55,16 @@ export const addNewPosts = (oldItems, freshItems) => {
 };
 
 export const getFeedUrl = (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${link}`;
+
+export const getErrorType = (error) => {
+  if (axios.isAxiosError(error)) {
+    return 'networkError';
+  }
+  if (error.isParsingError) {
+    return 'parseError';
+  }
+  if (error.type === 'notOneOf') {
+    return 'sameRss';
+  }
+  return 'invalidUrl';
+};
