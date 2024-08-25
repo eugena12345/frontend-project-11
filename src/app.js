@@ -51,7 +51,12 @@ const app = () => {
                 title, description, link: rssUrl, id: uniqueId(),
               };
               watchedState.feeds.unshift(feed);
-              watchedState.posts = addNewPosts(state.posts, items);
+              const itemsWithId = items.map((item) => {
+                const newItem = item;
+                newItem.id = uniqueId();
+                return newItem;
+              });
+              watchedState.posts = itemsWithId.concat(state.posts);
               form.reset();
               watchedState.form.isValid = true;
               watchedState.form.status = 'active';
