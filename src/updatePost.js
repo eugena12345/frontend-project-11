@@ -20,10 +20,6 @@ const updatePost = (stateForUpdate) => {
 
           resolve();
         });
-      // .catch((e) => {
-      //   console.log(getErrorType(e));
-
-      // });
     });
   });
   getNewPosts();
