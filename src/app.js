@@ -27,6 +27,11 @@ const app = () => {
   };
 
   const watchedState = view(state, i18next);
+  const errorHandler = (error) => {
+    watchedState.form.isValid = false;
+    watchedState.form.errors = getErrorType(error);
+    watchedState.form.status = 'active';
+  };
 
   const form = document.querySelector('form');
 
@@ -63,14 +68,11 @@ const app = () => {
             }
           })
           .catch((err) => {
-            watchedState.form.isValid = false;
-            watchedState.form.errors = getErrorType(err);
-            watchedState.form.status = 'active';
+            errorHandler(err);
           });
       })
       .catch((err) => {
-        watchedState.form.isValid = false;
-        watchedState.form.errors = getErrorType(err);
+        errorHandler(err);
       });
   });
 
