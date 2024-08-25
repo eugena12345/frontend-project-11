@@ -40,15 +40,12 @@ export const addNewPosts = (oldItems, freshItems) => {
   const newPosts = [];
   freshItems.forEach((item) => {
     const matchColl = oldItems.filter((oldItem) => oldItem.itemTitle === item.itemTitle);
-    if (matchColl.length > 0) {
-      // console.log(`match`);
-    } else {
+    if (matchColl.length === 0) {
       const newItem = { ...item };
       newItem.id = uniqueId();
       newPosts.unshift(newItem);
     }
   });
-  // const newUpdateArray = oldItems.concat(newPosts);
   const newUpdateArray = newPosts.concat(oldItems);
 
   return newUpdateArray;
