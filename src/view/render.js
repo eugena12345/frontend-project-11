@@ -36,11 +36,11 @@ export const renderDisable = (status) => {
   }
 };
 
-export const renderFeeds = (feeds) => {
+export const renderFeeds = (feeds, i18next) => {
   const feedsElement = document.querySelector('.feeds');
   feedsElement.textContent = '';
   const elementTitle = document.createElement('h3');
-  elementTitle.textContent = 'Фиды';
+  elementTitle.textContent = i18next.t('feeds');
   const ulFeeds = document.createElement('ul');
   ulFeeds.classList.add('list-group', 'border-0', 'rounded-0');
   feeds.forEach((feed) => {
@@ -62,7 +62,7 @@ export const renderPosts = (posts, visitedLinkIds, i18next) => {
   const postsElement = document.querySelector('.posts');
   postsElement.textContent = '';
   const elementTitle = document.createElement('h3');
-  elementTitle.textContent = 'Посты';
+  elementTitle.textContent = i18next.t('feeds');
   const ulPosts = document.createElement('ul');
   ulPosts.classList.add('list-group', 'border-0', 'rounded-0');
   posts.forEach((post) => {

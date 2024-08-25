@@ -12,5 +12,7 @@ export default {
       },
     },
     showPost: 'Просмотр',
+    feeds: 'Фиды',
+    posts: 'Посты',
   },
 };
