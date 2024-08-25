@@ -6,7 +6,7 @@ import uniqueId from 'lodash/uniqueId';
 import view from './view/index';
 import ru from './translation';
 import validate, {
-  getFeedUrl, parser, addNewPosts, getErrorType,
+  getFeedUrl, parser, getErrorType,
 } from './supportingFunc';
 import updatePost from './updatePost';
 
