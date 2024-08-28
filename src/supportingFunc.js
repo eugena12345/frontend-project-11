@@ -37,6 +37,7 @@ export const parser = (data) => {
 };
 
 export const addNewPosts = (oldItems, freshItems) => {
+  // console.log('oldItems', oldItems);
   const newPosts = [];
   freshItems.forEach((item) => {
     const matchColl = oldItems.filter((oldItem) => oldItem.itemTitle === item.itemTitle);

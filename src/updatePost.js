@@ -1,14 +1,15 @@
 import axios from 'axios';
-import i18next from 'i18next';
+// import i18next from 'i18next';
 import {
   getFeedUrl, parser, addNewPosts,
 } from './supportingFunc';
-import view from './view/index';
+// import view from './view/index';
 
-const updatePost = (stateForUpdate) => {
-  const watchedState = view(stateForUpdate, i18next);
+const updatePost = (watchedState) => {
+  // console.log(`update`)
+  // const watchedState = view(stateForUpdate, i18next);
   const getNewPosts = () => new Promise((resolve) => {
-    stateForUpdate.feeds.forEach((feed) => {
+    watchedState.feeds.forEach((feed) => {
       axios({
         method: 'get',
         url: getFeedUrl(feed.link),
@@ -16,7 +17,15 @@ const updatePost = (stateForUpdate) => {
         .then((response) => {
           const parsedData = parser(response.data);
           const { items } = parsedData;
-          watchedState.posts = addNewPosts(stateForUpdate.posts, items);
+          const newPost = addNewPosts(watchedState.posts, items);
+          // const newPost = [{itemTitle: 'Lorem ipsum 2024-08-26T21:04:00Z', itemDescription: 'Tempor magna amet occaecat consequat exercitation … officia sint amet reprehenderit est fugiat quis.', itemLink: 'http://example.com/test/1724706240', id: '12'}];
+          // console.log('watchedState.posts', watchedState.posts);
+          //    if (newPost) {
+          // watchedState.posts.unshift(newPost);
+          watchedState.posts.unshift(newPost);
+          // = newPost.concat(watchedState.posts);
+          //   }
+          // addNewPosts(watchedState.posts, items);
 
           resolve();
         });
@@ -25,7 +34,7 @@ const updatePost = (stateForUpdate) => {
   getNewPosts();
 
   setTimeout(() => {
-    updatePost(stateForUpdate);
+    updatePost(watchedState);
   }, 5000);
 };
 
