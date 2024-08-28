@@ -2,7 +2,7 @@ import { string } from 'yup';
 import uniqueId from 'lodash/uniqueId';
 import axios from 'axios';
 
-export default (rssUrl, feeds) => {
+export const validate = (rssUrl, feeds) => {
   const links = feeds.map((feed) => feed.link);
   const schema = string().trim().required().url()
     .nullable()

@@ -5,8 +5,8 @@ import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view, { elements } from './view/index';
 import ru from './translation';
-import validate, {
-  getFeedUrl, parser, getErrorType,
+import {
+  validate, getFeedUrl, parser, getErrorType,
 } from './supportingFunc';
 import updatePost from './updatePost';
 
