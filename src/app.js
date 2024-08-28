@@ -3,7 +3,7 @@ import 'bootstrap';
 import i18next from 'i18next';
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
-import view from './view/index';
+import view, { elements } from './view/index';
 import ru from './translation';
 import validate, {
   getFeedUrl, parser, getErrorType,
@@ -27,15 +27,14 @@ const app = () => {
   };
 
   const watchedState = view(state, i18next);
+  // эту функцию еще обработать
   const errorHandler = (error) => {
     watchedState.form.isValid = false;
     watchedState.form.errors = getErrorType(error);
     watchedState.form.status = 'active';
   };
 
-  const form = document.querySelector('form');
-
-  form.addEventListener('submit', (event) => {
+  elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
     watchedState.form.errors = null;
     const formData = new FormData(event.target);
@@ -59,10 +58,11 @@ const app = () => {
               const itemsWithId = items.map((item) => {
                 const newItem = item;
                 newItem.id = uniqueId();
+                // добавить к каналу
                 return newItem;
               });
-              watchedState.posts = itemsWithId.concat(state.posts);
-              form.reset();
+              watchedState.posts = itemsWithId.concat(state.posts); // unshift
+              elements.form.reset();
               watchedState.form.isValid = true;
               watchedState.form.status = 'active';
             }
@@ -76,20 +76,18 @@ const app = () => {
       });
   });
 
-  updatePost(state);
+  updatePost(watchedState);
 
-  const modal = document.querySelector('.modal');
-  modal.addEventListener('show.bs.modal', (event) => {
+  elements.modal.addEventListener('show.bs.modal', (event) => {
     const clickedButton = event.relatedTarget;
     const id = clickedButton.getAttribute('data-id');
     watchedState.modal.currentPost = id;
     watchedState.visitedLinkIds = [...state.visitedLinkIds, id];
   });
 
-  const posts = document.querySelector('.posts');
-  posts.addEventListener('click', (event) => {
+  elements.posts.addEventListener('click', (event) => {
     const clickedElement = event.target;
-    if (clickedElement.tagName === 'A') {
+    if (clickedElement.tagName === 'A') { // если есть дата атрибут, который есть только у ссылки
       const linkId = clickedElement.getAttribute('data-id');
       watchedState.visitedLinkIds = [...state.visitedLinkIds, linkId];
     }

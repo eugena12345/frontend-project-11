@@ -1,8 +1,5 @@
-export const renderAddRssResult = (state, i18next) => {
-  const inputElement = document.querySelector('#url-input');
-  const feedbackDiv = document.querySelector('.feedback');
-  const form = document.querySelector('form');
-
+export const renderAddRssResult = (state, i18next, elements) => {
+  const { inputElement, feedbackDiv, form } = elements;
   if (state.form.isValid === false) {
     inputElement.classList.add('is-invalid');
     feedbackDiv.classList.add('text-danger');
@@ -19,12 +16,8 @@ export const renderAddRssResult = (state, i18next) => {
   }
 };
 
-export const renderDisable = (status) => {
-  const form = document.querySelector('form');
-  const button = form.querySelector('button');
-  const inputElement = document.querySelector('#url-input');
-  const feedbackDiv = document.querySelector('.feedback');
-
+export const renderDisable = (status, i18next, elements) => {
+  const { inputElement, feedbackDiv, button } = elements;
   if (status === 'sending') {
     button.setAttribute('disabled', '');
     inputElement.classList.remove('is-invalid');
@@ -36,8 +29,8 @@ export const renderDisable = (status) => {
   }
 };
 
-export const renderFeeds = (feeds, i18next) => {
-  const feedsElement = document.querySelector('.feeds');
+export const renderFeeds = (feeds, i18next, elements) => {
+  const { feedsElement } = elements;
   feedsElement.textContent = '';
   const elementTitle = document.createElement('h3');
   elementTitle.textContent = i18next.t('feeds');
@@ -58,8 +51,8 @@ export const renderFeeds = (feeds, i18next) => {
   feedsElement.append(elementTitle, ulFeeds);
 };
 
-export const renderPosts = (posts, visitedLinkIds, i18next) => {
-  const postsElement = document.querySelector('.posts');
+export const renderPosts = (posts, visitedLinkIds, i18next, elements) => {
+  const { postsElement } = elements;
   postsElement.textContent = '';
   const elementTitle = document.createElement('h3');
   elementTitle.textContent = i18next.t('feeds');
@@ -92,12 +85,11 @@ export const renderPosts = (posts, visitedLinkIds, i18next) => {
   postsElement.append(elementTitle, ulPosts);
 };
 
-export const renderModal = (posts, currentPostId) => {
+export const renderModal = (posts, currentPostId, elements) => {
+  const { modalTitle, modalBody, modal } = elements;
+
   const currentPost = posts.filter((post) => post.id === currentPostId)[0];
-  const modal = document.querySelector('.modal');
-  const modalTitle = modal.querySelector('.modal-title');
   modalTitle.textContent = currentPost.itemTitle;
-  const modalBody = modal.querySelector('.modal-body');
   modalBody.textContent = currentPost.itemDescription;
   const readMoreButton = modal.querySelector('.btn-primary');
   readMoreButton.setAttribute('onclick', `window.open("${currentPost.itemLink}")`);
