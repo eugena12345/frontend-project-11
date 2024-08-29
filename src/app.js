@@ -40,7 +40,11 @@ const app = () => {
     const formData = new FormData(event.target);
     const rssUrl = formData.get('url');
     validate(rssUrl, state.feeds)
-      .then(() => {
+      .then((some) => {
+        if (some) {
+          // console.log(`возвращает валидную ссылку,
+          // ошибка отлавливается ниже в блоке catch ${some}`);
+        }
         watchedState.form.status = 'sending';
         axios({
           method: 'get',
@@ -58,7 +62,7 @@ const app = () => {
               const itemsWithId = items.map((item) => {
                 const newItem = item;
                 newItem.id = uniqueId();
-                // добавить к каналу
+                newItem.feedId = feed.id;
                 return newItem;
               });
               watchedState.posts = itemsWithId.concat(state.posts); // unshift
