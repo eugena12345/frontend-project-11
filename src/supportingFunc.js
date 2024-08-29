@@ -1,6 +1,6 @@
 import { string } from 'yup';
-import uniqueId from 'lodash/uniqueId';
-import differenceWith from 'lodash/differenceWith';
+// import uniqueId from 'lodash/uniqueId';
+// import differenceWith from 'lodash/differenceWith';
 import axios from 'axios';
 
 export const validate = (rssUrl, feeds) => {
@@ -37,24 +37,24 @@ export const parser = (data) => {
   };
 };
 
-export const checkNewPosts = (oldItems, freshItems) => {
-  const posts = differenceWith(freshItems, oldItems, (p1, p2) => p1.title === p2.title)
-    .map((post) => ({ ...post, id: uniqueId() })); // add  feedID
-  return posts;
-  // console.log('oldItems', oldItems);
-  // const newPosts = [];
-  // freshItems.forEach((item) => {
-  //   const matchColl = oldItems.filter((oldItem) => oldItem.itemTitle === item.itemTitle);
-  //   if (matchColl.length === 0) {
-  //     const newItem = { ...item };
-  //     newItem.id = uniqueId();
-  //     newPosts.unshift(newItem);
-  //   }
-  // });
-  // const newUpdateArray = newPosts.concat(oldItems);
+// export const checkNewPosts = (oldItems, freshItems) => {
+//   const posts = differenceWith(freshItems, oldItems, (p1, p2) => p1.title === p2.title)
+//     .map((post) => ({ ...post, id: uniqueId() })); // add  feedID
+//   return posts;
+// console.log('oldItems', oldItems);
+// const newPosts = [];
+// freshItems.forEach((item) => {
+//   const matchColl = oldItems.filter((oldItem) => oldItem.itemTitle === item.itemTitle);
+//   if (matchColl.length === 0) {
+//     const newItem = { ...item };
+//     newItem.id = uniqueId();
+//     newPosts.unshift(newItem);
+//   }
+// });
+// const newUpdateArray = newPosts.concat(oldItems);
 
-  // return newUpdateArray;
-};
+// return newUpdateArray;
+// };
 
 export const getFeedUrl = (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${link}`;
 
