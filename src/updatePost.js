@@ -1,11 +1,9 @@
 import axios from 'axios';
-// import i18next from 'i18next';
 import differenceWith from 'lodash/differenceWith';
 import uniqueId from 'lodash/uniqueId';
 import {
   getFeedUrl, parser,
 } from './supportingFunc';
-// import view from './view/index';
 
 const updatePost = (watchedState) => {
   const getNewPosts = () => new Promise((resolve) => {
@@ -18,10 +16,9 @@ const updatePost = (watchedState) => {
           const parsedData = parser(response.data);
           const { items } = parsedData;
           const oldPosts = watchedState.posts.filter((post) => post.feedId === feed.id);
-          // const newPosts = checkNewPosts(oldPosts, items);
           const newPosts = differenceWith(items, oldPosts, (p1, p2) => p1.title === p2.title)
             .map((post) => ({ ...post, id: uniqueId(), feedId: feed.id }));
-          console.log(newPosts);
+          // console.log(newPosts);
           watchedState.posts.unshift(...newPosts);
           resolve();
         });

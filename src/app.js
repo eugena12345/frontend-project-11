@@ -42,8 +42,8 @@ const app = () => {
     validate(rssUrl, state.feeds)
       .then((some) => {
         if (some) {
-          // console.log(`возвращает валидную ссылку,
-          // ошибка отлавливается ниже в блоке catch ${some}`);
+          errorHandler(some);
+          return;
         }
         watchedState.form.status = 'sending';
         axios({
@@ -74,10 +74,10 @@ const app = () => {
           .catch((err) => {
             errorHandler(err);
           });
-      })
-      .catch((err) => {
-        errorHandler(err);
       });
+      // .catch((err) => {
+      //   errorHandler(err);
+      // });
   });
 
   updatePost(watchedState);
