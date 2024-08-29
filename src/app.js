@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId';
 import view, { elements } from './view/index';
-import ru from './translation';
+import ru from './locales/ru/translation';
 import {
   validate, getFeedUrl, parser, getErrorType,
 } from './supportingFunc';
