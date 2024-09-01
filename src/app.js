@@ -2,13 +2,13 @@ import './styles.scss';
 import 'bootstrap';
 import i18next from 'i18next';
 import axios from 'axios';
-import uniqueId from 'lodash/uniqueId';
-import view, { elements } from './view/index';
-import ru from './locales/ru/translation';
+import uniqueId from 'lodash/uniqueId.js';
+import view, { elements } from './view/index.js';
+import ru from './locales/ru/translation.js';
 import {
   validate, getFeedUrl, parser, getErrorType,
-} from './supportingFunc';
-import updatePost from './updatePost';
+} from './supportingFunc.js';
+import updatePost from './updatePost.js';
 
 const app = () => {
   const state = {

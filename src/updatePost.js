@@ -1,9 +1,9 @@
 import axios from 'axios';
-import differenceWith from 'lodash/differenceWith';
-import uniqueId from 'lodash/uniqueId';
+import differenceWith from 'lodash/differenceWith.js';
+import uniqueId from 'lodash/uniqueId.js';
 import {
   getFeedUrl, parser,
-} from './supportingFunc';
+} from './supportingFunc.js';
 
 const compareTitle = (p1, p2) => p1.itemTitle === p2.itemTitle;
 

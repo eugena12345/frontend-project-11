@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import {
   renderAddRssResult, renderDisable, renderFeeds, renderModal, renderPosts,
-} from './render';
+} from './render.js';
 
 export const elements = {
   form: document.querySelector('form'),
