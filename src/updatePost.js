@@ -5,6 +5,8 @@ import {
   getFeedUrl, parser,
 } from './supportingFunc';
 
+const compareTitle = (p1, p2) => p1.itemTitle === p2.itemTitle;
+
 const updatePost = (watchedState) => {
   const getNewPosts = () => new Promise((resolve) => {
     watchedState.feeds.forEach((feed) => {
@@ -16,9 +18,8 @@ const updatePost = (watchedState) => {
           const parsedData = parser(response.data);
           const { items } = parsedData;
           const oldPosts = watchedState.posts.filter((post) => post.feedId === feed.id);
-          const newPosts = differenceWith(items, oldPosts, (p1, p2) => p1.title === p2.title)
+          const newPosts = differenceWith(items, oldPosts, compareTitle)
             .map((post) => ({ ...post, id: uniqueId(), feedId: feed.id }));
-          // console.log(newPosts);
           watchedState.posts.unshift(...newPosts);
           resolve();
         });

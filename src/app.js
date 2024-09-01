@@ -27,7 +27,6 @@ const app = () => {
   };
 
   const watchedState = view(state, i18next);
-  // эту функцию еще обработать
   const errorHandler = (error) => {
     watchedState.form.isValid = false;
     watchedState.form.errors = getErrorType(error);
@@ -65,7 +64,7 @@ const app = () => {
                 newItem.feedId = feed.id;
                 return newItem;
               });
-              watchedState.posts = itemsWithId.concat(state.posts); // unshift
+              watchedState.posts.unshift(...itemsWithId);
               elements.form.reset();
               watchedState.form.isValid = true;
               watchedState.form.status = 'active';
@@ -75,9 +74,6 @@ const app = () => {
             errorHandler(err);
           });
       });
-      // .catch((err) => {
-      //   errorHandler(err);
-      // });
   });
 
   updatePost(watchedState);
