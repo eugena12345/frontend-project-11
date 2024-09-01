@@ -87,7 +87,7 @@ const app = () => {
 
   elements.posts.addEventListener('click', (event) => {
     const clickedElement = event.target;
-    if (clickedElement.tagName === 'A') { // если есть дата атрибут, который есть только у ссылки
+    if (clickedElement.getAttribute('data-type') === 'link') {
       const linkId = clickedElement.getAttribute('data-id');
       watchedState.visitedLinkIds = [...state.visitedLinkIds, linkId];
     }

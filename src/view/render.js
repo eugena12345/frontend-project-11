@@ -71,6 +71,8 @@ export const renderPosts = (posts, visitedLinkIds, i18next, elements) => {
     link.setAttribute('href', post.itemLink);
     link.setAttribute('data-id', post.id);
     link.setAttribute('target', '_blank');
+    link.setAttribute('data-type', 'link');
+
     link.text = post.itemTitle;
     const buttonPost = document.createElement('button');
     buttonPost.classList.add('btn', 'btn-outline-primary', 'btn-sm');
