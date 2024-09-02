@@ -25,9 +25,3 @@ export const getErrorType = (error) => {
   }
   return 'invalidUrl';
 };
-
-export const errorHandler = (error, watchedState) => {
-  watchedState.form.isValid = false;
-  watchedState.form.errors = getErrorType(error);
-  watchedState.form.status = 'active';
-};

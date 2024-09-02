@@ -6,7 +6,7 @@ import uniqueId from 'lodash/uniqueId.js';
 import view, { elements } from './view/index.js';
 import ru from './locales/ru/translation.js';
 import {
-  validate, getFeedUrl, errorHandler,
+  validate, getFeedUrl, getErrorType,
 } from './supportingFunc.js';
 import updatePost from './updatePost.js';
 import parser from './parser.js';
@@ -35,9 +35,11 @@ const app = () => {
     const formData = new FormData(event.target);
     const rssUrl = formData.get('url');
     validate(rssUrl, state.feeds)
-      .then((some) => {
-        if (some) {
-          errorHandler(some, watchedState);
+      .then((err) => {
+        if (err) {
+          watchedState.form.isValid = false;
+          watchedState.form.errors = getErrorType(err);
+          watchedState.form.status = 'active';
           return;
         }
         watchedState.form.status = 'sending';
@@ -66,8 +68,10 @@ const app = () => {
               watchedState.form.status = 'active';
             }
           })
-          .catch((err) => {
-            errorHandler(err, watchedState);
+          .catch((error) => {
+            watchedState.form.isValid = false;
+            watchedState.form.errors = getErrorType(error);
+            watchedState.form.status = 'active';
           });
       });
   });
